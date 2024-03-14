@@ -46,7 +46,7 @@ def make(imagess,labelss,many,s):
         Dense(many, activation='softmax')
     ])
     model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
-    checkpoint = ModelCheckpoint("best_model.h5", monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
+    checkpoint = ModelCheckpoint("best_model.keras", monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
     fi=0
     for i in range(s):
         model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=1, batch_size=64, callbacks=[checkpoint])
@@ -72,7 +72,7 @@ def make(imagess,labelss,many,s):
         # accuracy1 = model.evaluate(X_test, y_test)
         st.write(f'已完成:{fi/10}')
         # st.write(f'目前模型準確度{accuracy1}')
-    model.save("test.h5")
+    #model.save("test.keras")
     return model
 
 
