@@ -11,10 +11,11 @@ from keras.metrics import Accuracy
 from sklearn.metrics import confusion_matrix,accuracy_score, recall_score, precision_score, f1_score
 import time
 import keras
+import os
 
 
 
-def make(imagess,labelss,many,s):
+def make(imagess,labelss,many,s,v1):
     X = np.array(imagess)
     y = np.array(labelss)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1/10, random_state=42)
@@ -70,8 +71,29 @@ def make(imagess,labelss,many,s):
         # st.write("Accuracy:", result)
         # # ac=accuracy_score(y_test, y_pred)
         # accuracy1 = model.evaluate(X_test, y_test)
-        st.write(f'已完成:{fi/10}')
+        st.write(f'已完成:{fi/s}')
+#     model_path = "test.keras"
+
+# # 创建文件下载按钮
+#     download_button = st.download_button(label="点击下载模型文件", data=model_path, file_name="test.keras", mime="application/octet-stream")
+
+# # 如果按钮被点击，显示下载状态
+#     if download_button:
+#         st.write("文件下载中...")
+#         os.remove(model_path)
         # st.write(f'目前模型準確度{accuracy1}')
+    # all_images=[]
+    # all_labels=[]
+    # imgs = st.file_uploader("請上傳要辨識的照片", type=["jpg", "png"], accept_multiple_files=True)
+    # for img in imgs:
+    #         img_pil = image.load_img(img, target_size=(100, 100), color_mode='grayscale')
+    #         img_array = image.img_to_array(img_pil)
+    #         v=img_array.reshape(-1,100,100,1)
+    #         v =v.astype('float32') / 255.0
+
+    #         v = model.predict(v)
+    #         st.write(v1[(np.argmax(v))])
+
     #model.save("test.keras")
     return model
 
@@ -112,7 +134,7 @@ def main():
             img_array = image.img_to_array(img_pil)
             all_images.append(img_array)
             all_labels.append(a)
-            v.append(lab)  # 將類別添加到標籤列表中
+        v.append(lab)  # 將類別添加到標籤列表中
         a=a+1
         tl=set(all_labels)
 
@@ -123,13 +145,24 @@ def main():
         z = st.slider('請選擇訓練次數', min_value=1, max_value=30, value=1)
         if st.button('開始訓練'):
             st.write("訓練已開始")
-            make(all_images,all_labels,cate,z)
-            st.write("模型建立完成")
+            trained_model = make(all_images,all_labels,cate,z,v)
+            st.session_state.trained_model = trained_model
+            download_button = st.download_button(label="点击下载模型文件", data="trained_model", file_name="trained_model.keras", mime="application/octet-stream")
+
+            # 模拟一个模型文件的路径
+#             model_path = "test.keras"
+
+# # 创建文件下载按钮
+#             download_button = st.download_button(label="点击下载模型文件", data=model_path, file_name="test.keras", mime="application/octet-stream")
+
+
+            if download_button:
+                st.write("文件下载中...")
+
         
 
 if __name__ == "__main__":
     main()
-
 
 
 
