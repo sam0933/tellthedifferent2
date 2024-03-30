@@ -160,9 +160,13 @@ def main():
 
     if   len(lab)  <cate:
         st.warning("請上傳圖片以建立模型")
-    else:
+    elif all_images:
         z = st.slider('請選擇訓練次數', min_value=1, max_value=30, value=1)
         if st.button('開始訓練'):
+            if os.path.exists('model123.keras'):
+                os.remove('model123.keras')
+            if os.path.exists('model.h5'):
+                os.remove('model.h5')
             st.write("訓練已開始，請不要做任何操作以避免訓練中斷")
             trained_model = make(colornumber,all_images,all_labels,cate,z,ph1)
             trained_model.save('model.h5')
@@ -206,13 +210,13 @@ def main():
             from keras.preprocessing import image
             from tensorflow.keras.models import load_model
             model = load_model('你下載的模型的路徑(要含副檔名)')
-            v=image.load_img('你想辨識的照片的路徑(要含副檔名)',target_size=(你當時選的畫質,你當時選的畫質), color_mode='grayscale'或'rgb')#grayscale是黑白  rgb是彩色  
+            v=image.load_img('你想辨識的照片的路徑(要含副檔名)',target_size=(你當時選的畫質,你當時選的畫質), color_mode='grayscale或rgb')#grayscale是黑白  rgb是彩色  
 
             label=['你的第一類的名稱','你的第二類的名稱','你的第n類名稱']
             v=image.img_to_array(v)
 
             #是四維陣列要說第一個1是總比數一定要寫
-            v=v.reshape(1,你當時選的畫質,你當時選的畫質,1或3)#黑白用1   彩色用3
+            v=v.reshape(1,你當時選的畫質,你當時選的畫質,1or3)#黑白用1   彩色用3
 
 
             v =v.astype('float32') / 255.0
@@ -223,6 +227,8 @@ def main():
     st.write('下面是在電腦使用模型的程式碼')
     st.warning('請確保您的電腦環境中以裝有streamlit、numpy、keras、scikit-learn、tensorflow')
     st.code(code1, language='python')
+    if os.path.exists('model123.keras') or os.path.exists('model.h5'):
+        st.write('確認')
 
 
 if __name__ == "__main__":
