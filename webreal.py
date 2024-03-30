@@ -67,9 +67,9 @@ def make(imagess,labelss,many,s,ph):
                 g=g+1
         st.write(f'目前模型準確度:{g/len(ytf)}')
         st.write(f'已完成:{fi/s}')
+    st.success('模型建立完成')
 
     return model
-
 
 
 
@@ -86,15 +86,18 @@ def main():
     all_images=[]
     all_labels=[]
     st.title("自動化影像辨識模型建立")
+    if st.button('使用說明'):
+        st.write('1選擇要分的種類數類和畫質')
+        st.write('2輸入每一類的名稱及上傳各類的訓練資料')
+        st.write('3按下「開始訓練」\n4在顯示訓練完成後按下「下載準備」再按「下載模型文件」')
+        st.write('4或是在下方使用模型的地方上傳要辨識的圖片接著最下方就會有一串列顯示第一張(第0項)是什麼類第二張是什麼(可上傳多張)')
     cate = st.slider('請選擇要分的類別數', min_value=1, max_value=10, value=2)
     ph1 = st.slider('請選擇畫質', min_value=1, max_value=500, value=100)
     a=0
-    check=0
     lab123=[]
-    # 創建 x 個標籤和文件上傳器
     for i in range(cate):
         lab = st.text_input(f"label {i+1}:")
-        imgs = st.file_uploader(f"上傳第 {i+1} 種圖片", type=["jpg", "png"], accept_multiple_files=True)
+        imgs = st.file_uploader(f"上傳第 {i+1} 類圖片", type=["jpg", "png"], accept_multiple_files=True)
         for img in imgs:
             img_pil = image.load_img(img, target_size=(ph1,ph1), color_mode='grayscale')
             img_array = image.img_to_array(img_pil)
@@ -113,16 +116,18 @@ def main():
             trained_model = make(all_images,all_labels,cate,z,ph1)
             trained_model.save('model.h5')
             trained_model.save('model123.keras')
+    
     if st.button("下載準備"):
         with open('model.h5','rb') as model_file:
             model_binary = model_file.read()
-        download_button = st.download_button(label="下载模型文件", data=model_binary, file_name="trained_model.h5", mime="application/octet-stream")
+        os.remove('model.h5')
+        download_button = st.download_button(label="下載模型文件", data=model_binary, file_name="trained_model.h5", mime="application/octet-stream")
         if download_button:
             st.write("文件下載中...")
     result=[]
 
 
-    imgs1 = st.file_uploader("上傳測試圖片", type=["jpg", "png"], accept_multiple_files=True)
+    imgs1 = st.file_uploader("使用模型", type=["jpg", "png"], accept_multiple_files=True)
     #if imgs1:  是當imgs1不為空串列時==True
     if imgs1:
         model=load_model('model123.keras')
@@ -130,7 +135,6 @@ def main():
         img_pil = image.load_img(img, target_size=(ph1,ph1), color_mode='grayscale')
         img_array = image.img_to_array(img_pil)
         v=img_array.reshape(1,ph1,ph1,1)
-
         v =v.astype('float32') / 255.0
         v = model.predict(v)
         result.append(lab123[(np.argmax(v))])
@@ -142,8 +146,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
