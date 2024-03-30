@@ -212,7 +212,7 @@ def main():
             v=image.img_to_array(v)
 
             #是四維陣列要說第一個1是總比數一定要寫
-            v=v.reshape(1,你當時選的畫質,你當時選的畫質,1or3)#黑白用1   彩色用3
+            v=v.reshape(1,你當時選的畫質,你當時選的畫質,1或3)#黑白用1   彩色用3
 
 
             v =v.astype('float32') / 255.0
