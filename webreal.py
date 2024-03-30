@@ -206,7 +206,7 @@ def main():
             from keras.preprocessing import image
             from tensorflow.keras.models import load_model
             model = load_model('你下載的模型的路徑(要含副檔名)')
-            v=image.load_img('你想辨識的照片的路徑(要含副檔名)',target_size=(你當時選的畫質,你當時選的畫質), color_mode='grayscale或rgb')#grayscale是黑白  rgb是彩色  
+            v=image.load_img('你想辨識的照片的路徑(要含副檔名)',target_size=(你當時選的畫質,你當時選的畫質), color_mode='grayscale'或'rgb')#grayscale是黑白  rgb是彩色  
 
             label=['你的第一類的名稱','你的第二類的名稱','你的第n類名稱']
             v=image.img_to_array(v)
