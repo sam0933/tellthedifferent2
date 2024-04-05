@@ -99,20 +99,17 @@ def make(colornumber1,imagess,labelss,many,s,ph):
     model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
     checkpoint = ModelCheckpoint("best_model.keras", monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
     fi=0
-    for i in range(s):
-        model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=1, batch_size=64, callbacks=[checkpoint])
-        fi=fi+1
-        y_pred = model.predict(X_test)
-        ytf=[]
-        for i in y_pred:
-            ytf.append(int(np.argmax(i)))
-        print(ytf)
+    model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=s, batch_size=64, callbacks=[checkpoint])
+    fi=fi+1
+    y_pred = model.predict(X_test)
+    ytf=[]
+    for i in y_pred:
+        ytf.append(int(np.argmax(i)))
         g=0
-        for i in range(len(ytf)):
-            if ytf[i]==y_tts[i]:
-                g=g+1
-        st.write(f'目前模型準確度:{g/len(ytf)}')
-        st.write(f'已完成:{fi/s}')
+    for i in range(len(ytf)):
+        if ytf[i]==y_tts[i]:
+            g=g+1
+    st.write(f'模型準確度:{g/len(ytf)}')
     st.success('模型建立完成')
 
     return model
